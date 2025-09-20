@@ -41,7 +41,29 @@ app.Run();
 
 async Task MigrateDatabaseAsync()
 {
-  using var scope = app.Services.CreateScope();
-  
-  await DataBaseMigration.MigrateDataBase(scope.ServiceProvider);
+  const int maxRetries = 5;
+  var delay = TimeSpan.FromSeconds(2);
+
+  for (var attempt = 1; attempt <= maxRetries; attempt++)
+  {
+    try
+    {
+      using var scope = app.Services.CreateScope();
+      await DataBaseMigration.MigrateDataBase(scope.ServiceProvider);
+      app.Logger.LogInformation("✅ Migrações aplicadas com sucesso.");
+      return;
+    }
+    catch (Exception ex)
+    {
+      app.Logger.LogWarning(ex, "Tentativa {Attempt}/{Max} ao aplicar migrações falhou.", attempt, maxRetries);
+
+      if (attempt == maxRetries)
+      {
+        app.Logger.LogError(ex, "❌ Não foi possível aplicar migrações após {Max} tentativas.", maxRetries);
+        throw; // subir erro para parar a app (melhor do que rodar sem tabelas)
+      }
+
+      await Task.Delay(delay);
+    }
+  }
 }
