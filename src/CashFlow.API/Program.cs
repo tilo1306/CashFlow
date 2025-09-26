@@ -3,6 +3,7 @@ using CashFlow.API.Filters;
 using CashFlow.API.Middleware;
 using CashFlow.Application;
 using CashFlow.Infrastructure;
+using CashFlow.Infrastructure.Extensions;
 using CashFlow.Infrastructure.Migrations;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -88,35 +89,22 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-await MigrateDatabaseAsync();
+if(builder.Configuration.IsTestEnvironment() == false)
+{
+  await MigrateDatabase();
+}
+
+
 
 app.Run();
-
-async Task MigrateDatabaseAsync()
+async Task MigrateDatabase()
 {
-  const int maxRetries = 5;
-  var delay = TimeSpan.FromSeconds(2);
+  await using var scope = app.Services.CreateAsyncScope();
 
-  for (var attempt = 1; attempt <= maxRetries; attempt++)
-  {
-    try
-    {
-      using var scope = app.Services.CreateScope();
-      await DataBaseMigration.MigrateDataBase(scope.ServiceProvider);
-      app.Logger.LogInformation("✅ Migrações aplicadas com sucesso.");
-      return;
-    }
-    catch (Exception ex)
-    {
-      app.Logger.LogWarning(ex, "Tentativa {Attempt}/{Max} ao aplicar migrações falhou.", attempt, maxRetries);
+  await DataBaseMigration.MigrateDataBase(scope.ServiceProvider);
+}
 
-      if (attempt == maxRetries)
-      {
-        app.Logger.LogError(ex, "❌ Não foi possível aplicar migrações após {Max} tentativas.", maxRetries);
-        throw; // subir erro para parar a app (melhor do que rodar sem tabelas)
-      }
-
-      await Task.Delay(delay);
-    }
-  }
+public partial class Program
+{
+  
 }
