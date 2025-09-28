@@ -1,7 +1,9 @@
 using System.Text;
 using CashFlow.API.Filters;
 using CashFlow.API.Middleware;
+using CashFlow.API.Token;
 using CashFlow.Application;
+using CashFlow.Domain.Security.Tokens;
 using CashFlow.Infrastructure;
 using CashFlow.Infrastructure.Extensions;
 using CashFlow.Infrastructure.Migrations;
@@ -51,6 +53,8 @@ builder.Services.AddMvc(options => options.Filters.Add(typeof(ExceptionFilter)))
 
 builder.Services.AddInfrastructure(builder.Configuration);
 builder.Services.AddApplication();
+builder.Services.AddScoped<ITokenProvider, HttpContextTokenValue>();
+builder.Services.AddHttpContextAccessor();
 
 var signingKey = builder.Configuration.GetValue<string>("Settings:Jwt:SigningKey");
 
