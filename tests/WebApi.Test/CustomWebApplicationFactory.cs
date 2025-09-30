@@ -1,3 +1,4 @@
+using CashFlow.Domain.Entities;
 using CashFlow.Domain.Security.Cryptography;
 using CashFlow.Domain.Security.Tokens;
 using CashFlow.Infrastructure.DataAccess;
@@ -46,12 +47,24 @@ public class CustomWebApplicationFactory : WebApplicationFactory<Program>
   
   private void StartDatabase(CashFlowDbContext dbContext, IPasswordEncripter passwordEncripter)
   {
-    var validPassword = "!Aa1Test123"; // Mesma senha usada no UserBuilder
+    AddUsers(dbContext, passwordEncripter);
+    AddExpenses(dbContext, _user);
+    dbContext.SaveChanges();
+  }
+
+  private void AddUsers(CashFlowDbContext dbContext, IPasswordEncripter passwordEncripter)
+  {
     _user = UserBuilder.Build();
-    _password = validPassword; // Armazenar a senha original para o teste
-    _user.Password = passwordEncripter.Encrypt(validPassword);
+    _password = _user.Password; 
+    _user.Password = passwordEncripter.Encrypt(_user.Password);
     
     dbContext.Users.Add(_user);
-    dbContext.SaveChanges();
+    
+  }
+
+  private void AddExpenses(CashFlowDbContext dbContext, User user)
+  {
+    var expense = ExpenseBuilder.Build(user);
+    dbContext.Expenses.Add(expense);
   }
 }
