@@ -12,15 +12,13 @@ using WebApi.Test.InlineData;
 
 namespace WebApi.Test.Expenses.Register;
 
-public class RegisterExpensesTest: IClassFixture<CustomWebApplicationFactory>
+public class RegisterExpensesTest: CashFlowClassFixture
 {
   private const string METHOD = "api/Expenses";
-  private readonly HttpClient _httpClient;
   private readonly string _token;
 
-  public RegisterExpensesTest(CustomWebApplicationFactory webApplicationFactory)
+  public RegisterExpensesTest(CustomWebApplicationFactory webApplicationFactory) : base(webApplicationFactory)
   {
-    _httpClient = webApplicationFactory.CreateClient();
     _token = webApplicationFactory.GetToken();
   }
 
@@ -29,9 +27,7 @@ public class RegisterExpensesTest: IClassFixture<CustomWebApplicationFactory>
   {
     var request = RequestExpenseJsonBuilder.Build();
     
-    _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _token);
-    
-    var result = await _httpClient.PostAsJsonAsync(METHOD, request);
+    var result = await DoPost(requestUrl:METHOD,requestBody: request, token:_token);
 
     result.StatusCode.Should().Be(HttpStatusCode.Created);
     
@@ -47,10 +43,8 @@ public class RegisterExpensesTest: IClassFixture<CustomWebApplicationFactory>
   {
     var request = RequestExpenseJsonBuilder.Build();
     request.Title = string.Empty;
-    _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _token);
-    _httpClient.DefaultRequestHeaders.AcceptLanguage.Add(new StringWithQualityHeaderValue(cultureInfo));
     
-    var result = await _httpClient.PostAsJsonAsync(METHOD, request);
+    var result = await DoPost(requestUrl:METHOD, requestBody:request, token:_token, culture: cultureInfo);
 
     result.StatusCode.Should().Be(HttpStatusCode.BadRequest);
     
@@ -62,8 +56,7 @@ public class RegisterExpensesTest: IClassFixture<CustomWebApplicationFactory>
       ResourceErrorMessages.ResourceManager.GetString("TITLE_REQUIRED", new CultureInfo(cultureInfo));
     
     errors.Should().HaveCount(1).And.Contain(error => error.GetString()!.Equals(expectedMessage));
-
-
+    
   }
 
 }
