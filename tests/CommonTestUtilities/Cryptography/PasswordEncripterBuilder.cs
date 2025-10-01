@@ -11,7 +11,7 @@ public class PasswordEncrypterBuilder
   {
     _mock = new Mock<IPasswordEncripter>();
 
-    _mock.Setup(passwordEncrypter => passwordEncrypter.Encrypt(It.IsAny<string>())).Returns("!%dlfjkd545");
+    _mock.Setup(passwordEncrypter => passwordEncrypter.Encrypt(It.IsAny<string>())).Returns("Testando1234@");
   }
 
   public PasswordEncrypterBuilder Verify(string? password)
