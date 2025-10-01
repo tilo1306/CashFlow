@@ -84,8 +84,9 @@ public class GenerateExpensesReportExcelUseCase : IGenerateExpensesReportExcelUs
         workSheet.Cell("D1").Value = ResourceReportGenerationMessages.AMOUNT;
         workSheet.Cell("E1").Value = ResourceReportGenerationMessages.DESCRIPTION;
 
-        workSheet.Cell("A1:E1").Style.Font.Bold = true;
-        workSheet.Cell("A1:E1").Style.Fill.BackgroundColor = XLColor.FromHtml("#F5C2B6");
+        var headerRange = workSheet.Range("A1:E1");
+        headerRange.Style.Font.Bold = true;
+        headerRange.Style.Fill.BackgroundColor = XLColor.FromHtml("#F5C2B6");
 
         workSheet.Cell("A1").Style.Alignment.SetHorizontal(XLAlignmentHorizontalValues.Center);
         workSheet.Cell("B1").Style.Alignment.SetHorizontal(XLAlignmentHorizontalValues.Center);
