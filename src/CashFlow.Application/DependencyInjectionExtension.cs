@@ -1,4 +1,5 @@
 ﻿using CashFlow.Application.AutoMapper;
+using CashFlow.Application.UseCases.ChangePassword;
 using CashFlow.Application.UseCases.Expenses.Delete;
 using CashFlow.Application.UseCases.Expenses.GetAll;
 using CashFlow.Application.UseCases.Expenses.GetId;
@@ -44,6 +45,7 @@ public static class DependencyInjectionExtension
         services.AddScoped<IDoLoginUseCase, DoLoginUseCase>();
         services.AddScoped<IGetUserProfileUseCase, GetUserProfileUseCase>();
         services.AddScoped<IUpdateUserUseCase, UpdateUserUseCase>();
-        
+        services.AddScoped<IChangePasswordUseCase, ChangePasswordUseCase>();
+
     }
 }
