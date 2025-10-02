@@ -122,5 +122,11 @@ namespace CashFlow.Exception {
                 return ResourceManager.GetString("PASSWORD_DIFFERENT_CURRENT_PASSWORD", resourceCulture);
             }
         }
+        
+        public static string TAG_TYPE_NOT_SUPPORTED {
+            get {
+                return ResourceManager.GetString("TAG_TYPE_NOT_SUPPORTED", resourceCulture);
+            }
+        }
     }
 }

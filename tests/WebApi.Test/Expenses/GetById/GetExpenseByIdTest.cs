@@ -33,12 +33,12 @@ public class GetExpenseByIdTest : CashFlowClassFixture
     var response = await JsonDocument.ParseAsync(body);
     
     response.RootElement.GetProperty("id").GetInt64().Should().Be(_expenseId);
-    response.RootElement.GetProperty("Title").GetString().Should().NotBeNullOrWhiteSpace();
-    response.RootElement.GetProperty("Description").GetString().Should().NotBeNullOrWhiteSpace();
+    response.RootElement.GetProperty("title").GetString().Should().NotBeNullOrWhiteSpace();
+    response.RootElement.GetProperty("description").GetString().Should().NotBeNullOrWhiteSpace();
     response.RootElement.GetProperty("date").GetDateTime().Should().NotBeAfter(DateTime.Today);
-    response.RootElement.GetProperty("Amount").GetDecimal().Should().BeGreaterThan(0);
+    response.RootElement.GetProperty("amount").GetDecimal().Should().BeGreaterThan(0);
     
-    var paymentType = response.RootElement.GetProperty("PaymentType").GetInt32();
+    var paymentType = response.RootElement.GetProperty("paymentType").GetInt32();
     Enum.IsDefined(typeof(PaymentType), paymentType).Should().BeTrue();
   }
   

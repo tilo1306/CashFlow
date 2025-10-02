@@ -22,7 +22,7 @@ public class GenerateExpensesReportTest : CashFlowClassFixture
   [Fact]
   public async Task Success_Pdf()
   {
-    var result = await DoGet(requestUrl: $"{METHOD}/pdf?month={_expenseDate:Y}", token: _adminToken);
+    var result = await DoGet(requestUrl: $"{METHOD}/pdf?month={_expenseDate:yyyy-MM-dd}", token: _adminToken);
 
     result.StatusCode.Should().Be(HttpStatusCode.OK);
 
@@ -33,7 +33,7 @@ public class GenerateExpensesReportTest : CashFlowClassFixture
   [Fact]
   public async Task Success_Excel()
   {
-    var result = await DoGet(requestUrl: $"{METHOD}/excel?month={_expenseDate:Y}", token: _adminToken);
+    var result = await DoGet(requestUrl: $"{METHOD}/excel?month={_expenseDate:yyyy-MM-dd}", token: _adminToken);
 
     result.StatusCode.Should().Be(HttpStatusCode.OK);
 
@@ -44,7 +44,7 @@ public class GenerateExpensesReportTest : CashFlowClassFixture
   [Fact]
   public async Task Error_Forbidden_User_Not_Allowed_Excel()
   {
-    var result = await DoGet(requestUrl: $"{METHOD}/excel?month={_expenseDate:Y}", token: _teamMemberToken);
+    var result = await DoGet(requestUrl: $"{METHOD}/excel?month={_expenseDate:yyyy-MM-dd}", token: _teamMemberToken);
 
     result.StatusCode.Should().Be(HttpStatusCode.Forbidden);
   }
@@ -52,7 +52,7 @@ public class GenerateExpensesReportTest : CashFlowClassFixture
   [Fact]
   public async Task Error_Forbidden_User_Not_Allowed_Pdf()
   {
-    var result = await DoGet(requestUrl: $"{METHOD}/pdf?month={_expenseDate:Y}", token: _teamMemberToken);
+    var result = await DoGet(requestUrl: $"{METHOD}/pdf?month={_expenseDate:yyyy-MM-dd}", token: _teamMemberToken);
 
     result.StatusCode.Should().Be(HttpStatusCode.Forbidden);
   }

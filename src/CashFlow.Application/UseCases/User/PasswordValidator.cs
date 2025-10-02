@@ -19,7 +19,7 @@ public class PasswordValidator<T> : PropertyValidator<T, string >
   {
     if (string.IsNullOrWhiteSpace(password))
     {
-      context.MessageFormatter.AppendArgument(ERROR_MESSAGE_KEY, "Password cannot be empty.");
+      context.MessageFormatter.AppendArgument(ERROR_MESSAGE_KEY, ResourceErrorMessages.INVALID_PASSWORD);
       return false;
     }
 
